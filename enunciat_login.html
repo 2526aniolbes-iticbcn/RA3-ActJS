@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Validació Login</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  background-color: #f1f1f1;
+  padding: 20px;
+  width: 300px;
+}
+
+.valid {
+  color: green;
+}
+.valid:before {
+  content: "✔ ";
+}
+
+.invalid {
+  color: red;
+}
+.invalid:before {
+  content: "✖ ";
+}
+
+#message_nom, #message_passwd {
+  background: #f1f1f1;
+  padding: 10px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h3>Validació contrasenya</h3>
+
+<form action="pelicules.html">
+  <div class="container">
+    <label>Nom</label><br>
+    <input type="text" id="username"><br><br>
+
+    <label>Contrasenya</label><br>
+    <input type="password" id="password"><br><br>
+
+    <input type="checkbox" id="togglePassword"> Mostrar contrasenya
+    <br><br>
+
+    <input type="submit" id="submitBtn" value="Enviar" style="display:none;">
+  </div>
+
+  <div id="message_nom">
+    <h4>El nom ha de tenir:</h4>
+    <p id="arroba" class="invalid">Una @</p>
+  </div>
+
+  <div id="message_passwd">
+    <h4>La contrasenya ha de tenir:</h4>
+    <p id="lower" class="invalid">Una minúscula</p>
+    <p id="upper" class="invalid">Una majúscula</p>
+    <p id="number" class="invalid">Un número</p>
+    <p id="length" class="invalid">Mínim 8 caràcters</p>
+  </div>
+
+</form>
+
+<script>
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const togglePassword = document.getElementById("togglePassword");
+const submitBtn = document.getElementById("submitBtn");
+
+const messageNom = document.getElementById("message_nom");
+const messagePass = document.getElementById("message_passwd");
+
+const arroba = document.getElementById("arroba");
+
+const lower = document.getElementById("lower");
+const upper = document.getElementById("upper");
+const number = document.getElementById("number");
+const length = document.getElementById("length");
+
+togglePassword.addEventListener("change", () => {
+  password.type = togglePassword.checked ? "text" : "password";
+});
+
+username.addEventListener("input", validateForm);
+password.addEventListener("input", validateForm);
+
+function validateForm() {
+  // Validación usuario
+  const userValid = username.value.includes("@");
+  setStatus(arroba, userValid);
+
+  // Validación contraseña
+  const hasLower = /[a-z]/.test(password.value);
+  const hasUpper = /[A-Z]/.test(password.value);
+  const hasNumber = /[0-9]/.test(password.value);
+  const hasLength = password.value.length >= 8;
+
+  setStatus(lower, hasLower);
+  setStatus(upper, hasUpper);
+  setStatus(number, hasNumber);
+  setStatus(length, hasLength);
+
+  // Si TODO está correcto
+  if (userValid && hasLower && hasUpper && hasNumber && hasLength) {
+    messageNom.style.display = "none";
+    messagePass.style.display = "none";
+    submitBtn.style.display = "block";
+  } else {
+    messageNom.style.display = "block";
+    messagePass.style.display = "block";
+    submitBtn.style.display = "none";
+  }
+}
+
+function setStatus(element, condition) {
+  element.classList.remove("valid", "invalid");
+  element.classList.add(condition ? "valid" : "invalid");
+}
+</script>
+
+
+</body>
+</html>
